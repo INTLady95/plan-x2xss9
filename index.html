@@ -161,7 +161,8 @@ button.home:hover{background:#C9A24C}button.home.on{background:#B8923E}
 <div class="homerow"><div class="homet"><b>Pod swoim imieniem widzisz tylko swoje zadania.</b> Chcesz zobaczyć cały plan — wszystkie trzy biznesy, kalendarz, listę, oś czasu?</div><button class="home" data-who="">⌂ POKAŻ CAŁY PLAN</button></div>
 <section class="forme" id="forme" hidden></section>
 <div class="intro"><b>Jak z tego korzystać (30 sekund).</b>
-<ol><li><b>Kliknij swoje imię u góry</b> — zobaczysz tylko to, czego Tatsiana/Reina od Ciebie potrzebuje, i przycisk do odpowiedzi.</li><li>Trzy karty = trzy biznesy. Każde zadanie ma termin i zapas czasu (bufor).</li>
+<ol><li><b>Kliknij swoje imię u góry</b> — zobaczysz tylko to, czego Tatsiana/Reina od Ciebie potrzebuje, i przycisk do odpowiedzi.</li>
+<li><b>Chcesz wrócić do całego planu?</b> Kliknij duży złoty przycisk <b>„POKAŻ CAŁY PLAN”</b> albo jeszcze raz swoje imię — wraca pełne menu: Backlog, Kalendarz, Lista, Oś czasu.</li><li>Trzy karty = trzy biznesy. Każde zadanie ma termin i zapas czasu (bufor).</li>
 <li>Chcesz coś dodać? Kliknij <b>＋ Dodaj propozycję</b> pod kartą albo dzień w <b>Kalendarzu</b> — otworzy się WhatsApp z gotową wiadomością do Tatsiany/Reiny. Piszesz zwyczajnie, po swojemu.</li>
 <li>Tatsiana/Reina wpisuje to do planu, a ta strona sama się odświeża. Później wszystko przenosimy do Notion.</li></ol></div>
 <div class="tabs"><button class="on" data-tab="b">Backlog</button><button data-tab="c">Kalendarz</button><button data-tab="l">Lista</button><button data-tab="t">Oś czasu</button><span class="tabhint">← kliknij, żeby przełączyć widok</span></div>
@@ -351,7 +352,7 @@ function renderForMe(who){
   box.innerHTML=h;box.hidden=false;
   box.querySelectorAll('button.home').forEach(x=>x.addEventListener('click',()=>{renderForMe('');window.scrollTo({top:0,behavior:'smooth'});}));
 }
-document.querySelectorAll('.whobar button').forEach(b=>b.addEventListener('click',()=>{renderForMe(b.dataset.who);if(b.dataset.who&&b.dataset.who!=='Tatsiana')document.getElementById('forme').scrollIntoView({block:'start',behavior:'smooth'});}));
+document.querySelectorAll('.whobar button').forEach(b=>b.addEventListener('click',()=>{const w=(b.classList.contains('on')||!b.dataset.who)?'':b.dataset.who;renderForMe(w);if(w)document.getElementById('forme').scrollIntoView({behavior:'smooth',block:'start'});else window.scrollTo({top:0,behavior:'smooth'});}));
 (function(){let w=null;try{w=localStorage.getItem('who');}catch(e){}if(w)renderForMe(w);})();
 
 const PL=["stycznia","lutego","marca","kwietnia","maja","czerwca","lipca","sierpnia","września","października","listopada","grudnia"];
