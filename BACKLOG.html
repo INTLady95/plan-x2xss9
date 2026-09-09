@@ -130,7 +130,12 @@ header{padding:22px 16px 16px}header h1{font-size:30px}header .sub{letter-spacin
 .whobar .wl{color:#C9AE72;font-size:12px;letter-spacing:.18em;text-transform:uppercase;margin-right:6px}
 .whobar button{font:600 15px Inter,Arial,sans-serif;border:1px solid rgba(201,174,114,.5);background:transparent;color:#EAE6DB;border-radius:999px;padding:8px 20px;cursor:pointer}
 .whobar button.on{background:#C9AE72;color:#0E3220;border-color:#C9AE72}
-.whobar button.home{margin-left:auto;border-color:rgba(255,255,255,.35);color:#EAE6DB;font-size:13px;padding:7px 14px}.whobar button.home.on{background:transparent;color:#EAE6DB}
+.homerow{display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap;background:#FBF1D6;border:2px solid #B8923E;border-radius:14px;padding:12px 18px;margin:0 0 18px}
+.homet{font-size:14.5px;color:#3A2E12;max-width:640px;line-height:1.4}
+button.home{font:800 18px Inter,Arial,sans-serif;letter-spacing:.06em;background:#B8923E;color:#0E3220;border:0;border-radius:14px;padding:16px 30px;cursor:pointer;box-shadow:0 4px 14px rgba(184,146,62,.45);white-space:nowrap}
+button.home:hover{background:#C9A24C}button.home.on{background:#B8923E}
+.forme .homebtn{display:flex;justify-content:center;margin-top:18px}
+@media(max-width:900px){button.home{width:100%;font-size:16px;padding:14px 18px}}
 .forme{background:var(--card);border:1px solid var(--line);border-left:5px solid #C9AE72;border-radius:14px;padding:16px 20px 18px;margin:0 0 22px}
 .forme>h2{font-size:28px;margin-bottom:4px}
 .asks{list-style:none;margin:0;padding:0}.asks li.ask{display:flex;gap:10px;padding:9px 0;border-top:1px solid var(--line)}.asks li.ask:first-child{border-top:0}
@@ -152,7 +157,8 @@ header{padding:22px 16px 16px}header h1{font-size:30px}header .sub{letter-spacin
 <div class="tip">← kliknij etykietę, np. „Czeka na kogoś”, a od razu zobaczysz listę tych zadań</div>
 </header>
 <main>
-<div class="whobar"><span class="wl">Kto jesteś?</span><button data-who="Marek">Marek</button><button data-who="Tomek">Tomek</button><span class="tip2">← kliknij na swoje imię, zobaczysz, co Tatsiana/Reina od Ciebie potrzebuje</span><button class="home" data-who="">⌂ Wróć do całego planu</button></div>
+<div class="whobar"><span class="wl">Kto jesteś?</span><button data-who="Marek">Marek</button><button data-who="Tomek">Tomek</button><span class="tip2">← kliknij na swoje imię, zobaczysz, co Tatsiana/Reina od Ciebie potrzebuje</span></div>
+<div class="homerow"><div class="homet"><b>Pod swoim imieniem widzisz tylko swoje zadania.</b> Chcesz zobaczyć cały plan — wszystkie trzy biznesy, kalendarz, listę, oś czasu?</div><button class="home" data-who="">⌂ POKAŻ CAŁY PLAN</button></div>
 <section class="forme" id="forme" hidden></section>
 <div class="intro"><b>Jak z tego korzystać (30 sekund).</b>
 <ol><li><b>Kliknij swoje imię u góry</b> — zobaczysz tylko to, czego Tatsiana/Reina od Ciebie potrzebuje, i przycisk do odpowiedzi.</li><li>Trzy karty = trzy biznesy. Każde zadanie ma termin i zapas czasu (bufor).</li>

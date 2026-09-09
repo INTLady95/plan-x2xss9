@@ -347,7 +347,9 @@ function renderForMe(who){
   const msg='Cześć Tatsiana/Reina, odpowiadam na listę:'+NL+open.map((a,i)=>(i+1)+'. '+a.what.replace(/<[^>]+>/g,'')+' — ').join(NL);
   h+='<a class="plus" target="_blank" rel="noopener" href="https://wa.me/'+WA+'?text='+encodeURIComponent(msg)+'">Odpowiedz Tatsianie/Reinie na WhatsApp</a><div class="hint">Otworzy się WhatsApp z tą listą — dopisz odpowiedzi po myślnikach.</div>';
   if(tasks.length){h+='<h3 class="sub2">Twoje zadania w planie ('+tasks.length+')</h3><ul class="asks">'+tasks.map(t=>'<li class="ask"><span class="cb" style="--dotc:'+(COL[t.biz]||'#999')+'"></span><div><div class="at">'+t.task+'</div><div class="meta"><span class="chip">do '+fmt(t.due)+'</span><span class="ph">'+LABEL[t.biz]+'</span><span class="ph">'+t.status+'</span></div></div></li>').join('')+'</ul>';}
+  h+='<div class="homebtn"><button class="home" data-who="">⌂ POKAŻ CAŁY PLAN</button></div>';
   box.innerHTML=h;box.hidden=false;
+  box.querySelectorAll('button.home').forEach(x=>x.addEventListener('click',()=>{renderForMe('');window.scrollTo({top:0,behavior:'smooth'});}));
 }
 document.querySelectorAll('.whobar button').forEach(b=>b.addEventListener('click',()=>{renderForMe(b.dataset.who);if(b.dataset.who&&b.dataset.who!=='Tatsiana')document.getElementById('forme').scrollIntoView({block:'start',behavior:'smooth'});}));
 (function(){let w=null;try{w=localStorage.getItem('who');}catch(e){}if(w)renderForMe(w);})();
