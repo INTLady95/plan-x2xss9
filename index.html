@@ -40,6 +40,19 @@ details.why{margin:0 0 26px;font-size:13.5px;color:var(--muted)}details.why summ
 .changes h2{font-size:22px;margin-bottom:6px}.changes ol{margin:0;padding-left:20px}.changes li{margin:5px 0;font-size:14px}
 footer{max-width:1180px;margin:0 auto;padding:0 24px 40px;font-size:12px;color:var(--muted)}
 /* calendar */
+.month{position:relative}
+.pop{position:absolute;z-index:5;width:300px;background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.14);padding:12px 14px 14px}
+.pop:before{content:"";position:absolute;top:14px;left:-7px;width:12px;height:12px;background:var(--card);border-left:1px solid var(--line);border-bottom:1px solid var(--line);transform:rotate(45deg)}
+.pop.left:before{left:auto;right:-7px;transform:rotate(225deg)}
+.pop h2{font-size:20px;margin:0 0 2px;padding-right:26px}.pop h3{font:600 11px Inter,Arial,sans-serif;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin:10px 0 4px}
+.pop ul{list-style:none;margin:0;padding:0}.pop li{display:flex;gap:8px;align-items:flex-start;padding:5px 0;border-top:1px solid var(--line);font-size:13px;line-height:1.35}.pop li:first-child{border-top:0}
+.cb{flex:0 0 15px;height:15px;border-radius:4px;border:1.5px solid #B9B4A8;margin-top:1px;display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff}
+.cb.on{background:var(--dotc,#0E3220);border-color:var(--dotc,#0E3220)}.cb.half{background:linear-gradient(90deg,var(--dotc,#0E3220) 50%,transparent 50%);border-color:var(--dotc,#0E3220)}
+.pop .empty{color:var(--muted);font-size:12.5px;margin:0}
+.pop .pclose{position:absolute;right:10px;top:10px;display:inline-block;border:1px solid var(--line);background:#fff;border-radius:999px;width:26px;height:26px;font-size:15px;line-height:24px;text-align:center;cursor:pointer;color:var(--muted)}
+.pop .plus{margin-top:10px;font-size:13px;padding:7px 12px}.pop .hint{font-size:11.5px}
+@media(min-width:901px){.cal-wrap{grid-template-columns:minmax(0,760px) 1fr}.panel{display:none}.pop{width:320px}}
+@media(max-width:900px){.pop{display:none!important}}
 .cal-wrap{display:grid;grid-template-columns:1fr 360px;gap:20px;align-items:start}
 .month{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px 16px;margin-bottom:18px}
 .month h2{font-size:24px;margin-bottom:8px}
@@ -190,6 +203,31 @@ const PL=["stycznia","lutego","marca","kwietnia","maja","czerwca","lipca","sierp
 document.querySelectorAll('.tabs button').forEach(b=>b.addEventListener('click',()=>{
   document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('on'));b.classList.add('on');
   document.getElementById('tab-b').hidden=b.dataset.tab!=='b';document.getElementById('tab-c').hidden=b.dataset.tab!=='c';}));
+function popHtml(iso,g){
+  const box=e=>{const st=e.kind==='done'?'on':(e.status==='w toku'?'half':'');return '<span class="cb '+st+'" style="--dotc:'+(COL[e.biz]||'#999')+'">'+(st==='on'?'✓':'')+'</span>';};
+  const li=e=>'<li>'+box(e)+'<span>'+e.text+(e.kind==='due'&&e.status&&e.status!=='done'?' <span class="ph">· '+e.status+'</span>':'')+'</span></li>';
+  let h='';
+  h+='<h3>Zrobione tego dnia</h3>'+(g.done.length?'<ul>'+g.done.map(li).join('')+'</ul>':'<p class="empty">Nic nie odhaczono.</p>');
+  h+='<h3>Terminy tego dnia</h3>'+(g.due.length?'<ul>'+g.due.map(li).join('')+'</ul>':'<p class="empty">Brak terminów.</p>');
+  if(g.buf.length) h+='<h3>Koniec bufora</h3><ul>'+g.buf.map(li).join('')+'</ul>';
+  if(g.log.length) h+='<h3>Dziennik</h3><ul>'+g.log.map(e=>'<li><span class="cb on" style="--dotc:#B8923E">✓</span><span>'+e.text+'</span></li>').join('')+'</ul>';
+  return h;
+}
+function showPop(el,iso,nice,g){
+  document.querySelectorAll('.pop').forEach(p=>p.remove());
+  if(window.innerWidth<=900) return;
+  const month=el.closest('.month'); const pop=document.createElement('div'); pop.className='pop';
+  const dd=iso.slice(8,10)+'.'+iso.slice(5,7);
+  const plus=(typeof WA!=='undefined')?'<a class="plus" target="_blank" rel="noopener" href="https://wa.me/'+WA+'?text='+encodeURIComponent("Zadanie na "+dd+" ("+nice+"):\nBiznes: CBD / HOLISPHERE / TechFun\nCo ma być zrobione do tego dnia:\n")+'">＋ Dodaj zadanie na ten dzień</a><div class="hint">Otworzy się WhatsApp z gotową wiadomością do Tatsiany.</div>':'';
+  pop.innerHTML='<button class="pclose" title="Zamknij">×</button><h2>'+nice+'</h2>'+popHtml(iso,g)+plus;
+  month.appendChild(pop);
+  const mrect=month.getBoundingClientRect(); const pw=320; let left=el.offsetLeft+el.offsetWidth+12; let top=el.offsetTop-6;
+  if(mrect.left+left+pw>window.innerWidth-12){left=el.offsetLeft-pw-12;pop.classList.add('left');}
+  if(mrect.left+left<6){left=el.offsetLeft;pop.classList.remove('left');top=el.offsetTop+el.offsetHeight+10;}
+  pop.style.left=left+'px';pop.style.top=Math.max(0,top)+'px';
+  pop.querySelector('.pclose').addEventListener('click',()=>pop.remove());
+}
+document.addEventListener('click',ev=>{if(!ev.target.closest('.pop')&&!ev.target.closest('.day'))document.querySelectorAll('.pop').forEach(p=>p.remove());});
 function show(iso){
   document.getElementById('calwrap').classList.add('open');
   document.querySelectorAll('.day.sel').forEach(e=>e.classList.remove('sel'));
@@ -204,12 +242,13 @@ function show(iso){
   if(g.buf.length) h+='<h3>Koniec bufora (ostatni dzwonek)</h3><ul>'+g.buf.map(li).join('')+'</ul>';
   if(g.log.length) h+='<h3>Dziennik</h3><ul>'+g.log.map(e=>'<li>'+e.text+'</li>').join('')+'</ul>';
   document.getElementById('p-body').innerHTML=h;
+  if(el) showPop(el,iso,nice,g);
   const dd=String(d.getDate()).padStart(2,'0')+'.'+String(d.getMonth()+1).padStart(2,'0');
   const plus=document.getElementById('p-plus'); plus.hidden=false; document.getElementById('p-hint').hidden=false;
   plus.href="https://wa.me/"+WA+"?text="+encodeURIComponent("Zadanie na "+dd+" ("+nice+"):\nBiznes: CBD / HOLISPHERE / TechFun\nCo ma być zrobione do tego dnia:\n");
 }
 document.querySelectorAll('.day[data-d]').forEach(e=>e.addEventListener('click',()=>{show(e.dataset.d);if(window.innerWidth<=900)document.getElementById('panel').scrollIntoView({block:'nearest'});}));
 document.getElementById('pclose').addEventListener('click',()=>document.getElementById('calwrap').classList.remove('open'));
-show("2026-09-09");
+show("2026-09-09"); document.querySelectorAll('.pop').forEach(p=>p.remove());
 if(window.innerWidth<=900) document.getElementById('calwrap').classList.remove('open');
 </script></body></html>
